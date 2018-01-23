@@ -1,13 +1,3 @@
-/*
-  part of this was modified from: https://github.com/pacificclimate/Rudunits2
-
-  (c) James Hiebert <hiebert@uvic.ca>
-  Pacific Climate Impacts Consortium
-  August, 16, 2010
-
-  Functions to support the R interface to the udunits (API version 2) library
-*/
-
 #include "Rcpp.h"
 #include "units.h"
 

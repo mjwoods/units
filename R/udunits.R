@@ -26,9 +26,10 @@ ud_get_symbol = function(u) {
   u <- trimws(u)
 	res = try({R_ut_get_symbol(sys, u)}, silent=TRUE)
 	if (inherits(res, "try-error"))
-		R_ut_get_name(sys, u)
-	else
-		res
+	  res = try({R_ut_get_symbol(sys, u)}, silent=TRUE)
+	if (inherits(res, "try-error"))
+		""
+	else res
 }
 
 ud_convert = function(value, from, to) {
