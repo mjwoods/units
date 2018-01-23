@@ -5,140 +5,140 @@
 
 using namespace Rcpp;
 
-// udunits_init
-void udunits_init(CharacterVector path);
-RcppExport SEXP _units_udunits_init(SEXP pathSEXP) {
+// R_ut_init
+SEXP R_ut_init(CharacterVector path);
+RcppExport SEXP _units_R_ut_init(SEXP pathSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type path(pathSEXP);
-    udunits_init(path);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(R_ut_init(path));
+    return rcpp_result_gen;
 END_RCPP
 }
-// udunits_exit
-void udunits_exit();
-RcppExport SEXP _units_udunits_exit() {
+// R_ut_set_encoding
+void R_ut_set_encoding(SEXP sys_, const std::string& enc_str);
+RcppExport SEXP _units_R_ut_set_encoding(SEXP sys_SEXP, SEXP enc_strSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    udunits_exit();
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type enc_str(enc_strSEXP);
+    R_ut_set_encoding(sys_, enc_str);
     return R_NilValue;
 END_RCPP
 }
 // R_ut_is_parseable
-bool R_ut_is_parseable(CharacterVector a);
-RcppExport SEXP _units_R_ut_is_parseable(SEXP aSEXP) {
+bool R_ut_is_parseable(SEXP sys_, const std::string& str);
+RcppExport SEXP _units_R_ut_is_parseable(SEXP sys_SEXP, SEXP strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(R_ut_is_parseable(a));
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(R_ut_is_parseable(sys_, str));
     return rcpp_result_gen;
 END_RCPP
 }
 // R_ut_are_convertible
-bool R_ut_are_convertible(CharacterVector a, CharacterVector b);
-RcppExport SEXP _units_R_ut_are_convertible(SEXP aSEXP, SEXP bSEXP) {
+bool R_ut_are_convertible(SEXP sys_, const std::string& a, const std::string& b);
+RcppExport SEXP _units_R_ut_are_convertible(SEXP sys_SEXP, SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type a(aSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(R_ut_are_convertible(a, b));
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(R_ut_are_convertible(sys_, a, b));
     return rcpp_result_gen;
 END_RCPP
 }
 // R_ut_convert_doubles
-NumericVector R_ut_convert_doubles(CharacterVector from, CharacterVector to, NumericVector val);
-RcppExport SEXP _units_R_ut_convert_doubles(SEXP fromSEXP, SEXP toSEXP, SEXP valSEXP) {
+NumericVector R_ut_convert_doubles(SEXP sys_, const std::string& from, const std::string& to, NumericVector val);
+RcppExport SEXP _units_R_ut_convert_doubles(SEXP sys_SEXP, SEXP fromSEXP, SEXP toSEXP, SEXP valSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type from(fromSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type to(toSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type from(fromSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type to(toSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type val(valSEXP);
-    rcpp_result_gen = Rcpp::wrap(R_ut_convert_doubles(from, to, val));
+    rcpp_result_gen = Rcpp::wrap(R_ut_convert_doubles(sys_, from, to, val));
     return rcpp_result_gen;
 END_RCPP
 }
 // R_ut_new_dimensionless_unit
-void R_ut_new_dimensionless_unit(CharacterVector name);
-RcppExport SEXP _units_R_ut_new_dimensionless_unit(SEXP nameSEXP) {
+void R_ut_new_dimensionless_unit(SEXP sys_, const std::string& name);
+RcppExport SEXP _units_R_ut_new_dimensionless_unit(SEXP sys_SEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type name(nameSEXP);
-    R_ut_new_dimensionless_unit(name);
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type name(nameSEXP);
+    R_ut_new_dimensionless_unit(sys_, name);
     return R_NilValue;
 END_RCPP
 }
 // R_ut_scale
-void R_ut_scale(CharacterVector nw, CharacterVector old, NumericVector d);
-RcppExport SEXP _units_R_ut_scale(SEXP nwSEXP, SEXP oldSEXP, SEXP dSEXP) {
+void R_ut_scale(SEXP sys_, const std::string& from, const std::string& to, double factor);
+RcppExport SEXP _units_R_ut_scale(SEXP sys_SEXP, SEXP fromSEXP, SEXP toSEXP, SEXP factorSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type nw(nwSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type old(oldSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    R_ut_scale(nw, old, d);
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type from(fromSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type to(toSEXP);
+    Rcpp::traits::input_parameter< double >::type factor(factorSEXP);
+    R_ut_scale(sys_, from, to, factor);
     return R_NilValue;
 END_RCPP
 }
 // R_ut_offset
-void R_ut_offset(CharacterVector nw, CharacterVector old, NumericVector d);
-RcppExport SEXP _units_R_ut_offset(SEXP nwSEXP, SEXP oldSEXP, SEXP dSEXP) {
+void R_ut_offset(SEXP sys_, const std::string& from, const std::string& to, double factor);
+RcppExport SEXP _units_R_ut_offset(SEXP sys_SEXP, SEXP fromSEXP, SEXP toSEXP, SEXP factorSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type nw(nwSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type old(oldSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    R_ut_offset(nw, old, d);
-    return R_NilValue;
-END_RCPP
-}
-// R_ut_set_encoding
-void R_ut_set_encoding(std::string enc_str);
-RcppExport SEXP _units_R_ut_set_encoding(SEXP enc_strSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type enc_str(enc_strSEXP);
-    R_ut_set_encoding(enc_str);
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type from(fromSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type to(toSEXP);
+    Rcpp::traits::input_parameter< double >::type factor(factorSEXP);
+    R_ut_offset(sys_, from, to, factor);
     return R_NilValue;
 END_RCPP
 }
 // R_ut_get_symbol
-CharacterVector R_ut_get_symbol(CharacterVector ustr);
-RcppExport SEXP _units_R_ut_get_symbol(SEXP ustrSEXP) {
+std::string R_ut_get_symbol(SEXP sys_, const std::string& str);
+RcppExport SEXP _units_R_ut_get_symbol(SEXP sys_SEXP, SEXP strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type ustr(ustrSEXP);
-    rcpp_result_gen = Rcpp::wrap(R_ut_get_symbol(ustr));
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(R_ut_get_symbol(sys_, str));
     return rcpp_result_gen;
 END_RCPP
 }
 // R_ut_get_name
-CharacterVector R_ut_get_name(CharacterVector ustr);
-RcppExport SEXP _units_R_ut_get_name(SEXP ustrSEXP) {
+std::string R_ut_get_name(SEXP sys_, const std::string& str);
+RcppExport SEXP _units_R_ut_get_name(SEXP sys_SEXP, SEXP strSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type ustr(ustrSEXP);
-    rcpp_result_gen = Rcpp::wrap(R_ut_get_name(ustr));
+    Rcpp::traits::input_parameter< SEXP >::type sys_(sys_SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(R_ut_get_name(sys_, str));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_units_udunits_init", (DL_FUNC) &_units_udunits_init, 1},
-    {"_units_udunits_exit", (DL_FUNC) &_units_udunits_exit, 0},
-    {"_units_R_ut_is_parseable", (DL_FUNC) &_units_R_ut_is_parseable, 1},
-    {"_units_R_ut_are_convertible", (DL_FUNC) &_units_R_ut_are_convertible, 2},
-    {"_units_R_ut_convert_doubles", (DL_FUNC) &_units_R_ut_convert_doubles, 3},
-    {"_units_R_ut_new_dimensionless_unit", (DL_FUNC) &_units_R_ut_new_dimensionless_unit, 1},
-    {"_units_R_ut_scale", (DL_FUNC) &_units_R_ut_scale, 3},
-    {"_units_R_ut_offset", (DL_FUNC) &_units_R_ut_offset, 3},
-    {"_units_R_ut_set_encoding", (DL_FUNC) &_units_R_ut_set_encoding, 1},
-    {"_units_R_ut_get_symbol", (DL_FUNC) &_units_R_ut_get_symbol, 1},
-    {"_units_R_ut_get_name", (DL_FUNC) &_units_R_ut_get_name, 1},
+    {"_units_R_ut_init", (DL_FUNC) &_units_R_ut_init, 1},
+    {"_units_R_ut_set_encoding", (DL_FUNC) &_units_R_ut_set_encoding, 2},
+    {"_units_R_ut_is_parseable", (DL_FUNC) &_units_R_ut_is_parseable, 2},
+    {"_units_R_ut_are_convertible", (DL_FUNC) &_units_R_ut_are_convertible, 3},
+    {"_units_R_ut_convert_doubles", (DL_FUNC) &_units_R_ut_convert_doubles, 4},
+    {"_units_R_ut_new_dimensionless_unit", (DL_FUNC) &_units_R_ut_new_dimensionless_unit, 2},
+    {"_units_R_ut_scale", (DL_FUNC) &_units_R_ut_scale, 4},
+    {"_units_R_ut_offset", (DL_FUNC) &_units_R_ut_offset, 4},
+    {"_units_R_ut_get_symbol", (DL_FUNC) &_units_R_ut_get_symbol, 2},
+    {"_units_R_ut_get_name", (DL_FUNC) &_units_R_ut_get_name, 2},
     {NULL, NULL, 0}
 };
 

@@ -4,15 +4,13 @@
 #' @useDynLib units
 NULL
 
+sys <- NULL
+
 .onLoad = function(libname, pkgname) {
-	udunits_init(.get_ud_xml_dir())
+	sys <<- R_ut_init(.get_ud_xml_dir())
 }
 
 .onAttach <- function(libname, pkgname) {
     msg <- paste("udunits system database from", .get_ud_xml_dir(TRUE))
     packageStartupMessage(msg)
-}
-
-.onUnLoad = function(libname, pkgname) {
-	udunits_exit()
 }

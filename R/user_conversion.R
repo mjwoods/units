@@ -17,7 +17,7 @@ install_symbolic_unit <- function(chr, warn = TRUE) {
               "Installation not necessary and is not performed")
     return(invisible(FALSE))
   }
-  R_ut_new_dimensionless_unit(chr)
+  ud_new_dimensionless_unit(chr)
   #assign(chr, NULL, envir =  user_defined_units)
 }
 
@@ -50,7 +50,7 @@ install_symbolic_unit <- function(chr, warn = TRUE) {
 #' @export
 install_conversion_constant <- function(from, to, const) {
   stopifnot(is.finite(const), const != 0.0)
-  R_ut_scale(as.character(to), as.character(from), 1.0 / as.double(const))
+  ud_scale(from, to, const)
 }
 
 #' @export
@@ -63,5 +63,5 @@ install_conversion_constant <- function(from, to, const) {
 #' n + m
 install_conversion_offset <- function(from, to, const) {
   stopifnot(is.finite(const), const != 0.0)
-  R_ut_offset(as.character(to), as.character(from), as.double(const))
+  ud_offset(from, to, const)
 }

@@ -9,102 +9,68 @@
 */
 
 #include "Rcpp.h"
+#include "units.h"
 
 using namespace Rcpp;
 
-extern "C" {
-#include <R.h>
-#include <udunits2.h>
-
-ut_system *sys = NULL;
-static ut_encoding enc = UT_UTF8;
-
-#include "io.h"
+// [[Rcpp::export]]
+SEXP R_ut_init(CharacterVector path) {
+  return XPtr<UnitSystem>(new UnitSystem(path));
 }
 
 // [[Rcpp::export]]
-void udunits_init(CharacterVector path) {
-  ut_set_error_message_handler(ut_ignore);
-  ut_free_system(sys);
-  for (int i = 0; i < path.size(); i++) {
-    if ((sys = ut_read_xml(path[i])) != NULL)
-      break;
-  }
-  if (sys == NULL)
-    sys = ut_read_xml(NULL);
-  ut_set_error_message_handler((ut_error_message_handler) r_error_fn);
-  if (sys == NULL)
-    handle_error("udunits_init");
+void R_ut_set_encoding(SEXP sys_, const std::string& enc_str) {
+  XPtr<UnitSystem> sys(sys_);
+  sys->set_encoding(enc_str);
 }
 
 // [[Rcpp::export]]
-void udunits_exit() { 
-  ut_free_system(sys);
-  sys = NULL;
+bool R_ut_is_parseable(SEXP sys_, const std::string& str) {
+  XPtr<UnitSystem> sys(sys_);
+  return sys->is_parseable(str);
 }
 
 // [[Rcpp::export]]
-bool R_ut_is_parseable(CharacterVector a) {
-  ut_unit *u = ut_parse(sys, ut_trim(a[0], enc), enc);
-  ut_free(u);
-  return u != NULL;
+bool R_ut_are_convertible(SEXP sys_, const std::string& a, const std::string& b) {
+  XPtr<UnitSystem> sys(sys_);
+  return sys->are_convertible(a, b);
 }
 
 // [[Rcpp::export]]
-bool R_ut_are_convertible(CharacterVector a, CharacterVector b) {
-  ut_unit *u1 = ut_parse(sys, ut_trim(a[0], enc), enc);
-  ut_unit *u2 = ut_parse(sys, ut_trim(b[0], enc), enc);
-  int i = ut_are_convertible(u1, u2);
-  ut_free(u1);
-  ut_free(u2);
-  return i != 0;
+NumericVector R_ut_convert_doubles(SEXP sys_, const std::string& from, 
+                                   const std::string& to, NumericVector val) {
+  XPtr<UnitSystem> sys(sys_);
+  return sys->convert_doubles(from, to, val);
 }
 
 // [[Rcpp::export]]
-NumericVector R_ut_convert_doubles(CharacterVector from, CharacterVector to, NumericVector val) {
-  NumericVector out(val); // if something happens, returns the same
-  ut_unit *u1 = ut_parse(sys, ut_trim(from[0], enc), enc);
-  ut_unit *u2 = ut_parse(sys, ut_trim(to[0], enc), enc);
-  cv_converter *cv = ut_get_converter(u1, u2);
-  if ((ut_get_status()) != UT_SUCCESS)
-    handle_error("R_ut_convert_doubles");
-  cv_convert_doubles(cv, &(val[0]), val.size(), &(out[0]));
-  cv_free(cv);
-  ut_free(u1);
-  ut_free(u2);
-  return out;
+void R_ut_new_dimensionless_unit(SEXP sys_, const std::string& name) {
+  XPtr<UnitSystem> sys(sys_);
+  sys->new_dimensionless_unit(name);
 }
 
 // [[Rcpp::export]]
-void R_ut_new_dimensionless_unit(CharacterVector name) {
-  ut_unit *u = ut_new_dimensionless_unit(sys); 
-  if (ut_map_name_to_unit(name[0], enc, u) != UT_SUCCESS)
-    handle_error("R_ut_new_dimensionless_unit");
-  ut_free(u);
+void R_ut_scale(SEXP sys_, const std::string& from, const std::string& to, double factor) {
+  XPtr<UnitSystem> sys(sys_);
+  sys->scale(from, to, factor);
 }
 
 // [[Rcpp::export]]
-void R_ut_scale(CharacterVector nw, CharacterVector old, NumericVector d) {
-  if (d.size() != 1)
-    stop("d should have size 1");
-  ut_unit *u_old = ut_parse(sys, ut_trim(old[0], enc), enc);
-  ut_unit *u_new = ut_scale(d[0], u_old);
-  if (ut_map_name_to_unit(nw[0], enc, u_new) != UT_SUCCESS)
-    handle_error("R_ut_add_scale");
-  ut_free(u_old);
-  ut_free(u_new);
+void R_ut_offset(SEXP sys_, const std::string& from, const std::string& to, double factor) {
+  XPtr<UnitSystem> sys(sys_);
+  sys->offset(from, to, factor);
 }
 
 // [[Rcpp::export]]
-void R_ut_offset(CharacterVector nw, CharacterVector old, NumericVector d) {
-  if (d.size() != 1)
-    stop("d should have size 1");
-  ut_unit *u_old = ut_parse(sys, ut_trim(old[0], enc), enc);
-  ut_unit *u_new = ut_offset(u_old, d[0]);
-  if (ut_map_name_to_unit(nw[0], enc, u_new) != UT_SUCCESS)
-    handle_error("R_ut_offset");
-  ut_free(u_old);
-  ut_free(u_new);
+std::string R_ut_get_symbol(SEXP sys_, const std::string& str) {
+  XPtr<UnitSystem> sys(sys_);
+  return sys->get_symbol(str);
+}
+
+// [[Rcpp::export]]
+std::string R_ut_get_name(SEXP sys_, const std::string& str) {
+  XPtr<UnitSystem> sys(sys_);
+  return sys->get_name(str);
 }
 
 //// [[Rcpp::export]]
@@ -175,44 +141,6 @@ void R_ut_offset(CharacterVector nw, CharacterVector old, NumericVector d) {
 //     handle_error("buffer of 256 bytes too small!");
 //   return CharacterVector::create(buf);
 // }
-
-// [[Rcpp::export]]
-void R_ut_set_encoding(std::string enc_str) {
-  if (enc_str.compare("utf8") == 0)
-    enc = UT_UTF8;
-  else if (enc_str.compare("ascii") == 0)
-    enc = UT_ASCII;
-  else if (enc_str.compare("iso-8859-1") == 0 || enc_str.compare("latin1") == 0)
-    enc = UT_LATIN1;
-  else
-    stop("Valid encoding string parameters are ('utf8'|'ascii'|'iso-8859-1','latin1')");
-}
-
-// [[Rcpp::export]]
-CharacterVector R_ut_get_symbol(CharacterVector ustr) {
-  ut_unit *u = ut_parse(sys, ut_trim(ustr[0], enc), enc);
-  if (u == NULL)
-    handle_error("R_ut_get_name");
-  const char *s = ut_get_symbol(u, enc);
-  ut_free(u);
-  if (s == NULL)
-    return CharacterVector::create("");
-  else
-    return CharacterVector::create(s);
-}
-
-// [[Rcpp::export]]
-CharacterVector R_ut_get_name(CharacterVector ustr) {
-  ut_unit *u = ut_parse(sys, ut_trim(ustr[0], enc), enc);
-  if (u == NULL)
-    handle_error("R_ut_get_name");
-  const char *s = ut_get_name(u, enc);
-  ut_free(u);
-  if (s == NULL)
-    return CharacterVector::create("");
-  else
-    return CharacterVector::create(s);
-}
 
 // // https://github.com/r-quantities/units/issues/89#issuecomment-359251623
 // // [[Rcpp::export]]
