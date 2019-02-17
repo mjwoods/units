@@ -42,4 +42,4 @@ set_units(1, "bar", mode = "standard")
 
 set_units(10, uu <- degree_C, mode = "standard")
 
-set_units(1:10, μm)
+set_units(1:10, "μm")
