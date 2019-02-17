@@ -26,7 +26,7 @@ via a global option \code{units_options(set_units_mode = "standard")}}
 A pipe friendly version of \code{units<-}
 }
 \examples{
-units::set_units("μm")
+units::set_units(1, "μm")
 }
 \seealso{
 \code{\link{as_units}}

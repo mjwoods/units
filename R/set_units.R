@@ -23,7 +23,7 @@
 #' @rdname set_units
 #' @seealso \code{\link{as_units}}
 #' @examples
-#' units::set_units("μm")
+#' units::set_units(1, "μm")
 set_units <- function(x, value, ..., mode = units_options("set_units_mode"))
   UseMethod("set_units")
 
