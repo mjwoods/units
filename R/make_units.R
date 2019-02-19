@@ -341,8 +341,8 @@ as_units.call <- function(x, check_is_valid = TRUE, ...) {
 
   stopifnot(is.language(x))
   
-  vars <- enc2utf8(vars)
   vars <- all.vars(x)
+  vars <- enc2utf8(vars)
   if(!length(vars))
     stop(call. = FALSE,
 "No symbols found. Please supply bare expressions with this approach.
