@@ -3,9 +3,7 @@
 \name{matmult}
 \alias{matmult}
 \alias{\%*\%}
-\alias{matmult}
 \alias{\%*\%.default}
-\alias{matmult}
 \alias{\%*\%.units}
 \title{matrix multiplication}
 \usage{

@@ -9,58 +9,58 @@ SEXP R_ut_init(CharacterVector path) {
 }
 
 // [[Rcpp::export]]
-void R_ut_set_encoding(SEXP sys_, const std::string& enc_str) {
+void R_ut_set_encoding(SEXP sys_, CharacterVector enc_str) {
   XPtr<UnitSystem> sys(sys_);
-  sys->set_encoding(enc_str);
+  sys->set_encoding(enc_str[0]);
 }
 
 // [[Rcpp::export]]
-bool R_ut_is_parseable(SEXP sys_, const std::string& str) {
+bool R_ut_is_parseable(SEXP sys_, CharacterVector str) {
   XPtr<UnitSystem> sys(sys_);
-  return sys->is_parseable(str);
+  return sys->is_parseable(str[0]);
 }
 
 // [[Rcpp::export]]
-bool R_ut_are_convertible(SEXP sys_, const std::string& a, const std::string& b) {
+bool R_ut_are_convertible(SEXP sys_, CharacterVector a, CharacterVector b) {
   XPtr<UnitSystem> sys(sys_);
-  return sys->are_convertible(a, b);
+  return sys->are_convertible(a[0], b[0]);
 }
 
 // [[Rcpp::export]]
-NumericVector R_ut_convert_doubles(SEXP sys_, const std::string& from, 
-                                   const std::string& to, NumericVector val) {
+NumericVector R_ut_convert_doubles(SEXP sys_, CharacterVector from, 
+                                   CharacterVector to, NumericVector val) {
   XPtr<UnitSystem> sys(sys_);
-  return sys->convert_doubles(from, to, val);
+  return sys->convert_doubles(from[0], to[0], val);
 }
 
 // [[Rcpp::export]]
-void R_ut_new_dimensionless_unit(SEXP sys_, const std::string& name) {
+void R_ut_new_dimensionless_unit(SEXP sys_, CharacterVector name) {
   XPtr<UnitSystem> sys(sys_);
-  sys->new_dimensionless_unit(name);
+  sys->new_dimensionless_unit(name[0]);
 }
 
 // [[Rcpp::export]]
-void R_ut_scale(SEXP sys_, const std::string& from, const std::string& to, double factor) {
+void R_ut_scale(SEXP sys_, CharacterVector from, CharacterVector to, double factor) {
   XPtr<UnitSystem> sys(sys_);
-  sys->scale(from, to, factor);
+  sys->scale(from[0], to[0], factor);
 }
 
 // [[Rcpp::export]]
-void R_ut_offset(SEXP sys_, const std::string& from, const std::string& to, double factor) {
+void R_ut_offset(SEXP sys_, CharacterVector from, CharacterVector to, double factor) {
   XPtr<UnitSystem> sys(sys_);
-  sys->offset(from, to, factor);
+  sys->offset(from[0], to[0], factor);
 }
 
 // [[Rcpp::export]]
-std::string R_ut_get_symbol(SEXP sys_, const std::string& str) {
+CharacterVector R_ut_get_symbol(SEXP sys_, CharacterVector str) {
   XPtr<UnitSystem> sys(sys_);
-  return sys->get_symbol(str);
+  return sys->get_symbol(str[0]);
 }
 
 // [[Rcpp::export]]
-std::string R_ut_get_name(SEXP sys_, const std::string& str) {
+CharacterVector R_ut_get_name(SEXP sys_, CharacterVector str) {
   XPtr<UnitSystem> sys(sys_);
-  return sys->get_name(str);
+  return sys->get_name(str[0]);
 }
 
 //// [[Rcpp::export]]

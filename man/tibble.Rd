@@ -3,7 +3,6 @@
 \name{tibble}
 \alias{tibble}
 \alias{type_sum.units}
-\alias{tibble}
 \alias{pillar_shaft.units}
 \title{type_sum function for units}
 \usage{

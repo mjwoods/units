@@ -1,18 +1,10 @@
 #ifndef RCPP_UDUNITS2_H
 #define RCPP_UDUNITS2_H
 
-/*
- part of this was modified from: https://github.com/pacificclimate/Rudunits2
-  
-  (c) James Hiebert <hiebert@uvic.ca>
-  Pacific Climate Impacts Consortium
-  August, 16, 2010
-  
-  Functions to support the R interface to the udunits (API version 2) library
-*/
-
 #include <Rcpp.h>
 #include <udunits2.h>
+
+using namespace Rcpp;
 
 template <typename T, void Finalize(T*)>
 class Ptr {
@@ -51,15 +43,15 @@ private:
   }
 };
 
-typedef Ptr<ut_unit, ut_free> Unit;
-typedef Ptr<cv_converter, cv_free> Converter;
+using Unit = Ptr<ut_unit, ut_free>;
+using Converter = Ptr<cv_converter, cv_free>;
 
 class UnitSystem : public Ptr<ut_system, ut_free_system> {
 public:
-  typedef Ptr<ut_system, ut_free_system> Parent;
-  typedef std::map<std::string, Unit> Cache;
+  using Parent = Ptr<ut_system, ut_free_system>;
+  using Cache = std::unordered_map<const char*, Unit>;
   
-  UnitSystem(Rcpp::CharacterVector path) : Parent(NULL), enc(UT_UTF8) {
+  UnitSystem(CharacterVector path) : Parent(NULL), enc(UT_UTF8) {
     ut_system* sys;
     ut_set_error_message_handler(ut_ignore);
     
@@ -70,91 +62,89 @@ public:
     if (sys == NULL)
       sys = ut_read_xml(NULL);
     if (sys == NULL)
-      Rcpp::stop("cannot instantiate a system of units");
+      stop("cannot instantiate a system of units");
     
     set(sys);
   }
   
-  void set_encoding(const std::string& enc_str) {
-    if (enc_str.compare("utf8") == 0)
+  void set_encoding(const char* enc_str) {
+    if (std::strcmp(enc_str, "utf8") == 0)
       enc = UT_UTF8;
-    else if (enc_str.compare("ascii") == 0)
+    else if (std::strcmp(enc_str, "ascii") == 0)
       enc = UT_ASCII;
-    else if (enc_str.compare("iso-8859-1") == 0 || enc_str.compare("latin1") == 0)
+    else if (std::strcmp(enc_str, "iso-8859-1") == 0 || std::strcmp(enc_str, "latin1") == 0)
       enc = UT_LATIN1;
     else
-      Rcpp::stop("Valid encoding string parameters are ('utf8'|'ascii'|'iso-8859-1','latin1')");
+      stop("Valid encoding string parameters are ('utf8'|'ascii'|'iso-8859-1','latin1')");
   }
   
-  bool is_parseable(const std::string& str) {
-    try { 
+  bool is_parseable(char* str) {
+    try {
       resolve(str);
       return true;
     } catch (...) {}
     return false;
   }
   
-  bool are_convertible(const std::string& a, const std::string& b) {
+  bool are_convertible(char* a, char* b) {
     return ut_are_convertible(resolve(a).get(), resolve(b).get());
   }
   
-  Rcpp::NumericVector convert_doubles(const std::string& from, 
-                                      const std::string& to, 
-                                      Rcpp::NumericVector val)
-  {
-    Rcpp::NumericVector out(val.size());
+  NumericVector convert_doubles(char* from, char* to, NumericVector val) {
+    NumericVector out(val.size());
     Converter cv(ut_get_converter(resolve(from).get(), resolve(to).get()));
     if (!cv_convert_doubles(cv.get(), &(val[0]), val.size(), &(out[0])))
-      Rcpp::stop("cannot convert '%s' to '%s'", from, to);
+      stop("cannot convert '%s' to '%s'", from, to);
     return out;
   }
   
-  void new_dimensionless_unit(const std::string& name) {
+  void new_dimensionless_unit(char* name) {
     Unit u(ut_new_dimensionless_unit(get())); 
-    if (ut_map_name_to_unit(name.c_str(), enc, u.get()) != UT_SUCCESS)
-      Rcpp::stop("cannot create dimensionless unit '%s'", name);
+    if (ut_map_name_to_unit(name, enc, u.get()) != UT_SUCCESS)
+      stop("cannot create dimensionless unit '%s'", name);
   }
   
-  void scale(const std::string& from, const std::string& to, double factor) {
+  void scale(char* from, char* to, double factor) {
     Unit u_new(ut_scale(factor, resolve(from).get()));
-    if (ut_map_name_to_unit(to.c_str(), enc, u_new.get()) != UT_SUCCESS)
-      Rcpp::stop("cannot create scaled unit '%s' from '%s'", to, from);
+    if (ut_map_name_to_unit(to, enc, u_new.get()) != UT_SUCCESS)
+      stop("cannot create scaled unit '%s' from '%s'", to, from);
   }
   
-  void offset(const std::string& from, const std::string& to, double factor) {
+  void offset(char* from, char* to, double factor) {
     Unit u_new(ut_offset(resolve(from).get(), factor));
-    if (ut_map_name_to_unit(to.c_str(), enc, u_new.get()) != UT_SUCCESS)
-      Rcpp::stop("cannot create offset unit '%s' from '%s'", to, from);
+    if (ut_map_name_to_unit(to, enc, u_new.get()) != UT_SUCCESS)
+      stop("cannot create offset unit '%s' from '%s'", to, from);
   }
   
-  std::string get_symbol(const std::string& str) {
+  const char* get_symbol(char* str) {
     Unit u = resolve(str);
     const char *s = ut_get_symbol(u.get(), enc);
     if (s == NULL)
-      Rcpp::stop("cannot get symbol '%s'", str);
-    return std::string(s);
+      return "";
+    return s;
   }
   
-  std::string get_name(const std::string& str) {
+  const char* get_name(char* str) {
     Unit u = resolve(str);
     const char *s = ut_get_name(u.get(), enc);
     if (s == NULL)
-      Rcpp::stop("cannot get name '%s'", str);
-    return std::string(s);
+      return "";
+    return s;
   }
   
 private:
   ut_encoding enc;
   Cache cache;
   
-  const Unit& resolve(const std::string& str) {
-    Cache::const_iterator it = cache.find(str);
+  const Unit& resolve(char* str) {
+    char* str_trim = ut_trim(str, enc);
+    auto it = cache.find(str_trim);
     if (it != cache.end())
       return it->second;
-    ut_unit* u = ut_parse(get(), str.c_str(), enc);
+    ut_unit* u = ut_parse(get(), str_trim, enc);
     if (u == NULL)
-      Rcpp::stop("cannot parse '%s'", str);
-    return cache[str] = Unit(u);
+      stop("cannot parse '%s'", str);
+    return cache[str_trim] = Unit(u);
   }
 };
 
