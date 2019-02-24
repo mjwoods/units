@@ -67,7 +67,8 @@
   expand_with_prefixes <- function(symbol) paste(ud_prefixes, symbol, sep = "")
   symbols <- unique(c(ud_symbols,
                       unlist(Map(expand_with_prefixes, ud_symbols), use.names = FALSE)))
-  ud_units <- Map(make_unit, symbols)
+  #ud_units <- Map(make_unit, symbols)
+  ud_units <- lapply(symbols, as_units, force_single_symbol = TRUE, check_is_valid = FALSE)
   names(ud_units) <- symbols
   ud_units
 }
